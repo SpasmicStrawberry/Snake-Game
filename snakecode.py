@@ -31,37 +31,25 @@ class Snake:
     def getDirection(self):
         return self.direction
 
-    def setX(self,x):
-        self.x = x
-
     def getX(self):
         return self.x
 
-    def setY(self,y):
-        self.y = y
-
     def getY(self):
         return self.y
-
-    def getSize(self):
-        return self.size
 
     def draw(self,screen):
         pygame.draw.rect(screen,self.color,[self.x,self.y,self.size,self.size])
 
 class Food:
     def __init__(self):
-        self.size = 5
+        self.size = 20
         self.color = [255,255,255]
-        self.x = 5*(random.randint(2,158))
-        self.y = 5*(random.randint(2,118))
+        self.x = 20*(random.randint(0,39))
+        self.y = 20*(random.randint(0,29))
 
     def changePos(self):
-        self.x = 5*(random.randint(2,158))
-        self.y = 5*(random.randint(2,118))
-
-    def getSize(self):
-        return self.size
+        self.x = 20*(random.randint(0,39))
+        self.y = 20*(random.randint(0,29))
 
     def getX(self):
         return self.x
@@ -70,14 +58,11 @@ class Food:
         return self.y
 
     def draw(self,screen):
-        pygame.draw.circle(screen,self.color,[self.x,self.y],self.size)
+        pygame.draw.rect(screen,self.color,[self.x,self.y,self.size,self.size])
 
 #checks if the snake touched the food
-def eatfood(snakeX,snakeY,foodX,foodY,snakeSize,foodSize):
-    if (foodY > snakeY - foodSize) and \
-        (foodY < snakeY + snakeSize + foodSize) and\
-        (foodX > snakeX - foodSize) and \
-        (foodX < snakeX + snakeSize + foodSize):
+def eatfood(snakeX,snakeY,foodX,foodY):
+    if snakeX == foodX and snakeY == foodY:
         return True
     return False
 
@@ -114,8 +99,7 @@ def main():
             snake[0].setDirection(direction)
 
         #food has been eaten
-        if eatfood(snake[0].getX(),snake[0].getY(),food.getX(),\
-            food.getY(),snake[0].getSize(),food.getSize()):
+        if eatfood(snake[0].getX(),snake[0].getY(),food.getX(),food.getY()):
             side = snake[len(snake)-1].getDirection()
             if side == "up":
                 direction = "up"
