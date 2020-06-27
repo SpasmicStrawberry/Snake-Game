@@ -31,11 +31,20 @@ class Snake:
     def getDirection(self):
         return self.direction
 
+    def setX(self,x):
+        self.x = x
+
     def getX(self):
         return self.x
 
+    def setY(self,y):
+        self.y = y
+
     def getY(self):
         return self.y
+
+    def getSize(self):
+        return self.size
 
     def draw(self,screen):
         pygame.draw.rect(screen,self.color,[self.x,self.y,self.size,self.size])
@@ -50,6 +59,9 @@ class Food:
     def changePos(self):
         self.x = 20*(random.randint(0,39))
         self.y = 20*(random.randint(0,29))
+
+    def getSize(self):
+        return self.size
 
     def getX(self):
         return self.x
