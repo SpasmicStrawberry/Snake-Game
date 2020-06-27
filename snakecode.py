@@ -8,12 +8,12 @@ clock = pygame.time.Clock()
 
 class Snake:
     def __init__(self,x,y,direction):
-        self.speed = 5
+        self.speed = 20
         self.direction = direction
         self.x = x
         self.y = y
         self.color = [0,0,255]
-        self.size = 25
+        self.size = 20
     
     def move(self):
         if self.direction == "up":
@@ -97,10 +97,11 @@ def main():
         if ev.type == pygame.QUIT:
             crashed = True
         
-        clock.tick(60)
+        clock.tick(20)
         screen.fill([0,0,0])
 
         #controling the snake
+        direct = snake[0].getDirection() #this will be used to update the 2nd snake
         if ev.type == pygame.KEYDOWN:
             if ev.key == pygame.K_UP and snake[0].getDirection() != "down":
                 direction = "up"
@@ -139,8 +140,11 @@ def main():
         snake[0].move()
         snake[0].draw(screen)
         for i in range(1,len(snake)):
+            tempDir = snake[i].getDirection()
+            snake[i].setDirection(direct)
             snake[i].move()
             snake[i].draw(screen)
+            direct = tempDir
 
         food.draw(screen)
         pygame.display.flip()
