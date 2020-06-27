@@ -7,9 +7,9 @@ screenLength = 800
 clock = pygame.time.Clock()
 
 class Snake:
-    def __init__(self,x,y):
+    def __init__(self,x,y,direction):
         self.speed = 5
-        self.direction = "down"
+        self.direction = direction
         self.x = x
         self.y = y
         self.color = [0,0,255]
@@ -66,6 +66,7 @@ class Food:
     def draw(self,screen):
         pygame.draw.circle(screen,self.color,[self.x,self.y],self.size)
 
+#checks if the snake touched the food
 def eatfood(snakeX,snakeY,foodX,foodY,snakeSize,foodSize):
     if (foodY > snakeY - foodSize) and \
         (foodY < snakeY + snakeSize + foodSize) and\
@@ -81,7 +82,7 @@ def main():
     direction = "down"
 
     snake = []
-    snake.append(Snake(startX,starty))
+    snake.append(Snake(startX,starty,direction))
     food = Food()
 
     crashed = False
@@ -93,6 +94,7 @@ def main():
         clock.tick(60)
         screen.fill([0,0,0])
 
+        #controling the snake
         if ev.type == pygame.KEYDOWN:
             if ev.key == pygame.K_UP and snake[0].getDirection() != "down":
                 direction = "up"
@@ -104,12 +106,33 @@ def main():
                 direction = "right"
             snake[0].setDirection(direction)
 
+        #food has been eaten
         if eatfood(snake[0].getX(),snake[0].getY(),food.getX(),\
             food.getY(),snake[0].getSize(),food.getSize()):
+            side = snake[len(snake)-1].getDirection()
+            if side == "up":
+                direction = "up"
+                x = snake[len(snake)-1].getX()
+                y = snake[len(snake)-1].getY() + snake[0].getSize()
+            elif side == "down":
+                direction = "down"
+                x = snake[len(snake)-1].getX()
+                y = snake[len(snake)-1].getY() - snake[0].getSize()
+            elif side == "left":
+                direction = "left"
+                x = snake[len(snake)-1].getX() + snake[0].getSize()
+                y = snake[len(snake)-1].getY()
+            else:
+                direction = "right"
+                x = snake[len(snake)-1].getX() - snake[0].getSize()
+                y = snake[len(snake)-1].getY()
+            snake.append(Snake(x,y,direction))
             food.changePos()
 
+        #update snake
         snake[0].move()
-        snake[0].draw(screen)
+        for i in range(len(snake)):
+            snake[i].draw(screen)
         food.draw(screen)
         pygame.display.flip()
 main()
