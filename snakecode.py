@@ -1,7 +1,7 @@
 import pygame
 import random
 
-screenWidth = 500
+screenWidth = 600
 screenLength = 800
 
 clock = pygame.time.Clock()
@@ -13,7 +13,7 @@ class Snake:
         self.x = x
         self.y = y
         self.color = [0,0,255]
-        self.size = 20
+        self.size = 25
     
     def move(self):
         if self.direction == "up":
@@ -28,6 +28,9 @@ class Snake:
     def setDirection(self,direction):
         self.direction = direction
 
+    def getDirection(self):
+        return self.direction
+
     def getX(self):
         return self.x
 
@@ -40,16 +43,19 @@ class Snake:
     def draw(self,screen):
         pygame.draw.rect(screen,self.color,[self.x,self.y,self.size,self.size])
 
-class Snack:
+class Food:
     def __init__(self):
         self.size = 5
         self.color = [255,255,255]
-        self.x = 5*(random.randint(0,160))
-        self.y = 5*(random.randint(0,120))
+        self.x = 5*(random.randint(2,158))
+        self.y = 5*(random.randint(2,118))
 
     def changePos(self):
-        self.x = 5*(random.randint(0,160))
-        self.y = 5*(random.randint(0,120))
+        self.x = 5*(random.randint(2,158))
+        self.y = 5*(random.randint(2,118))
+
+    def getSize(self):
+        return self.size
 
     def getX(self):
         return self.x
@@ -57,15 +63,14 @@ class Snack:
     def getY(self):
         return self.y
 
-    def getSize(self):
-        return self.size
-
     def draw(self,screen):
         pygame.draw.circle(screen,self.color,[self.x,self.y],self.size)
 
-def eatSnack(snakeX,snakeY,snackX,snackY,snakeSize,snackSize):
-    if (snackY > snakeY) and (snackY + snackSize < snakeY + snakeSize) and\
-        (snackX < snakeX + snakeSize):
+def eatfood(snakeX,snakeY,foodX,foodY,snakeSize,foodSize):
+    if (foodY > snakeY - foodSize) and \
+        (foodY < snakeY + snakeSize + foodSize) and\
+        (foodX > snakeX - foodSize) and \
+        (foodX < snakeX + snakeSize + foodSize):
         return True
     return False
 
@@ -73,9 +78,11 @@ def main():
     screen = pygame.display.set_mode([screenLength,screenWidth])
     startX = 400
     starty = 300
+    direction = "down"
 
-    snake = Snake(startX,starty)
-    snack = Snack()
+    snake = []
+    snake.append(Snake(startX,starty))
+    food = Food()
 
     crashed = False
     while not crashed:
@@ -87,18 +94,22 @@ def main():
         screen.fill([0,0,0])
 
         if ev.type == pygame.KEYDOWN:
-            if ev.key == pygame.K_UP:
+            if ev.key == pygame.K_UP and snake[0].getDirection() != "down":
                 direction = "up"
-            if ev.key == pygame.K_DOWN:
+            if ev.key == pygame.K_DOWN and snake[0].getDirection() != "up":
                 direction = "down"
-            if ev.key == pygame.K_LEFT:
+            if ev.key == pygame.K_LEFT and snake[0].getDirection() != "right":
                 direction = "left"
-            if ev.key == pygame.K_RIGHT:
+            if ev.key == pygame.K_RIGHT and snake[0].getDirection() != "left":
                 direction = "right"
-            snake.setDirection(direction)
+            snake[0].setDirection(direction)
 
-        snake.move()
-        snake.draw(screen)
-        snack.draw(screen)
+        if eatfood(snake[0].getX(),snake[0].getY(),food.getX(),\
+            food.getY(),snake[0].getSize(),food.getSize()):
+            food.changePos()
+
+        snake[0].move()
+        snake[0].draw(screen)
+        food.draw(screen)
         pygame.display.flip()
 main()
