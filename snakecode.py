@@ -69,6 +69,19 @@ def eatfood(snakeX,snakeY,foodX,foodY):
         return True
     return False
 
+#checks if the snake is out of bounds
+def outOfBounds(x,y):
+    if x < 0 or x >= screenLength:
+        return True
+    if y < 0 or y >= screenWidth:
+        return True
+    return False
+
+#checks if the snake hit itself
+def hitSelf(x,y):
+    pass
+
+#main game function
 def main():
     screen = pygame.display.set_mode([screenLength,screenWidth])
     startX = 400
@@ -85,7 +98,7 @@ def main():
         if ev.type == pygame.QUIT:
             crashed = True
         
-        clock.tick(20)
+        clock.tick(60)
         screen.fill([0,0,0])
 
         #controling the snake
@@ -133,6 +146,11 @@ def main():
             snake[i].draw(screen)
             direct = tempDir
 
+        if outOfBounds(snake[0].getX(),snake[0].getY()):
+            crashed = True
+
         food.draw(screen)
         pygame.display.flip()
+
+        pygame.time.delay(80)
 main()
