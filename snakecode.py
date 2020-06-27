@@ -31,8 +31,14 @@ class Snake:
     def getDirection(self):
         return self.direction
 
+    def setX(self,x):
+        self.x = x
+
     def getX(self):
         return self.x
+
+    def setY(self,y):
+        self.y = y
 
     def getY(self):
         return self.y
@@ -131,8 +137,11 @@ def main():
 
         #update snake
         snake[0].move()
-        for i in range(len(snake)):
+        snake[0].draw(screen)
+        for i in range(1,len(snake)):
+            snake[i].move()
             snake[i].draw(screen)
+
         food.draw(screen)
         pygame.display.flip()
 main()
