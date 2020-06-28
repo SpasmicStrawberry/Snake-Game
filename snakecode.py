@@ -47,12 +47,12 @@ class Food:
     def __init__(self):
         self.size = 20
         self.color = [255,255,255]
-        self.x = 20*(random.randint(0,39))
-        self.y = 20*(random.randint(0,29))
+        self.x = self.size*(random.randint(0,screenLength/self.size-1))
+        self.y = self.size*(random.randint(0,screenWidth/self.size-1))
 
     def changePos(self):
-        self.x = 20*(random.randint(0,39))
-        self.y = 20*(random.randint(0,29))
+        self.x = self.size*(random.randint(0,screenLength/self.size-1))
+        self.y = self.size*(random.randint(0,screenWidth/self.size-1))
 
     def getX(self):
         return self.x
@@ -78,8 +78,11 @@ def outOfBounds(x,y):
     return False
 
 #checks if the snake hit itself
-def hitSelf(x,y):
-    pass
+def hitSelf(x,y,snake):
+    for i in range(5,len(snake)):
+        if snake[i].getX() == x and snake[i].getY() == y:
+            return True
+    return False
 
 #main game function
 def main():
@@ -146,7 +149,8 @@ def main():
             snake[i].draw(screen)
             direct = tempDir
 
-        if outOfBounds(snake[0].getX(),snake[0].getY()):
+        if outOfBounds(snake[0].getX(),snake[0].getY()) or \
+            hitSelf(snake[0].getX(),snake[0].getY(),snake):
             crashed = True
 
         food.draw(screen)
