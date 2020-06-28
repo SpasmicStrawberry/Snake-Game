@@ -149,6 +149,7 @@ def main():
             snake[i].draw(screen)
             direct = tempDir
 
+        #lose conditions
         if outOfBounds(snake[0].getX(),snake[0].getY()) or \
             hitSelf(snake[0].getX(),snake[0].getY(),snake):
             crashed = True
