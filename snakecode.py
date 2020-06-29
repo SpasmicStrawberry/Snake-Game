@@ -1,7 +1,7 @@
 import pygame
 import random
 
-screenWidth = 600
+screenWidth = 660
 screenLength = 800
 
 clock = pygame.time.Clock()
@@ -48,11 +48,11 @@ class Food:
         self.size = 20
         self.color = [255,255,255]
         self.x = self.size*(random.randint(0,screenLength/self.size-1))
-        self.y = self.size*(random.randint(0,screenWidth/self.size-1))
+        self.y = self.size*(random.randint(3,screenWidth/self.size-1))
 
     def changePos(self):
         self.x = self.size*(random.randint(0,screenLength/self.size-1))
-        self.y = self.size*(random.randint(0,screenWidth/self.size-1))
+        self.y = self.size*(random.randint(3,screenWidth/self.size-1))
 
     def getX(self):
         return self.x
@@ -73,7 +73,7 @@ def eatfood(snakeX,snakeY,foodX,foodY):
 def outOfBounds(x,y):
     if x < 0 or x >= screenLength:
         return True
-    if y < 0 or y >= screenWidth:
+    if y < 60 or y >= screenWidth:
         return True
     return False
 
@@ -84,15 +84,21 @@ def hitSelf(x,y,snake):
             return True
     return False
 
+def drawScoreBoard(screen,score):
+    color = [255,255,255]
+    pygame.draw.rect(screen,color,[0,0,800,60])
+
 #main game function
 def main():
     screen = pygame.display.set_mode([screenLength,screenWidth])
     startX = 400
     starty = 300
-    direction = "down"
+    direction = "right"
 
     snake = []
     snake.append(Snake(startX,starty,direction))
+    snake.append(Snake(startX-snake[0].getSize(),starty,direction))
+    snake.append(Snake(startX-2*snake[0].getSize(),starty,direction))
     food = Food()
 
     crashed = False
@@ -109,11 +115,11 @@ def main():
         if ev.type == pygame.KEYDOWN:
             if ev.key == pygame.K_UP and snake[0].getDirection() != "down":
                 direction = "up"
-            if ev.key == pygame.K_DOWN and snake[0].getDirection() != "up":
+            elif ev.key == pygame.K_DOWN and snake[0].getDirection() != "up":
                 direction = "down"
-            if ev.key == pygame.K_LEFT and snake[0].getDirection() != "right":
+            elif ev.key == pygame.K_LEFT and snake[0].getDirection() != "right":
                 direction = "left"
-            if ev.key == pygame.K_RIGHT and snake[0].getDirection() != "left":
+            elif ev.key == pygame.K_RIGHT and snake[0].getDirection() != "left":
                 direction = "right"
             snake[0].setDirection(direction)
 
@@ -138,6 +144,9 @@ def main():
                 y = snake[len(snake)-1].getY()
             snake.append(Snake(x,y,direction))
             food.changePos()
+
+        #update score board
+        drawScoreBoard(screen,0)
 
         #update snake
         snake[0].move()
