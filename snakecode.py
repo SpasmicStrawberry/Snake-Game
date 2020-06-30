@@ -97,8 +97,8 @@ def main():
 
     snake = []
     snake.append(Snake(startX,starty,direction))
-    snake.append(Snake(startX-snake[0].getSize(),starty,direction))
-    snake.append(Snake(startX-2*snake[0].getSize(),starty,direction))
+    #snake.append(Snake(startX-snake[0].getSize(),starty,direction))
+    #snake.append(Snake(startX-2*snake[0].getSize(),starty,direction))
     food = Food()
 
     crashed = False
@@ -123,31 +123,6 @@ def main():
                 direction = "right"
             snake[0].setDirection(direction)
 
-        #food has been eaten
-        if eatfood(snake[0].getX(),snake[0].getY(),food.getX(),food.getY()):
-            side = snake[len(snake)-1].getDirection()
-            if side == "up":
-                direction = "up"
-                x = snake[len(snake)-1].getX()
-                y = snake[len(snake)-1].getY() + snake[0].getSize()
-            elif side == "down":
-                direction = "down"
-                x = snake[len(snake)-1].getX()
-                y = snake[len(snake)-1].getY() - snake[0].getSize()
-            elif side == "left":
-                direction = "left"
-                x = snake[len(snake)-1].getX() + snake[0].getSize()
-                y = snake[len(snake)-1].getY()
-            else:
-                direction = "right"
-                x = snake[len(snake)-1].getX() - snake[0].getSize()
-                y = snake[len(snake)-1].getY()
-            snake.append(Snake(x,y,direction))
-            food.changePos()
-
-        #update score board
-        drawScoreBoard(screen,0)
-
         #update snake
         snake[0].move()
         snake[0].draw(screen)
@@ -157,6 +132,27 @@ def main():
             snake[i].move()
             snake[i].draw(screen)
             direct = tempDir
+
+        #food has been eaten
+        if eatfood(snake[0].getX(),snake[0].getY(),food.getX(),food.getY()):
+            side = snake[len(snake)-1].getDirection()
+            if side == "up":
+                x = snake[len(snake)-1].getX()
+                y = snake[len(snake)-1].getY() + snake[0].getSize()
+            elif side == "down":
+                x = snake[len(snake)-1].getX()
+                y = snake[len(snake)-1].getY() - snake[0].getSize()
+            elif side == "left":
+                x = snake[len(snake)-1].getX() + snake[0].getSize()
+                y = snake[len(snake)-1].getY()
+            else:
+                x = snake[len(snake)-1].getX() - snake[0].getSize()
+                y = snake[len(snake)-1].getY()
+            snake.append(Snake(x,y,side))
+            food.changePos()
+
+        #update score board
+        drawScoreBoard(screen,0)
 
         #lose conditions
         if outOfBounds(snake[0].getX(),snake[0].getY()) or \
