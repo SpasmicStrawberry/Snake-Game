@@ -155,6 +155,9 @@ def main():
                 y = snake[len(snake)-1].getY()
             snake.append(Snake(x,y,side))
             food.changePos()
+            while any(e.getX() == food.getX() for e in snake) and\
+                any(e.getY() == food.getY() for e in snake):
+                food.changePos()
 
         #update score board
         drawScoreBoard(screen,points)
