@@ -1,8 +1,10 @@
 import pygame
 import random
 
+pygame.init()
 screenWidth = 660
 screenLength = 800
+font = pygame.font.SysFont("calibri", 32)
 
 clock = pygame.time.Clock()
 
@@ -84,12 +86,16 @@ def hitSelf(x,y,snake):
             return True
     return False
 
-def drawScoreBoard(screen,score):
+#displays the score 
+def drawScoreBoard(screen,points):
     color = [255,255,255]
     pygame.draw.rect(screen,color,[0,0,800,60])
+    score = font.render("Score: " + str(points), True, (0,0,0))
+    screen.blit(score, (20,0))
 
 #main game function
 def main():
+    points = 0
     screen = pygame.display.set_mode([screenLength,screenWidth])
     startX = 400
     starty = 300
@@ -97,8 +103,6 @@ def main():
 
     snake = []
     snake.append(Snake(startX,starty,direction))
-    #snake.append(Snake(startX-snake[0].getSize(),starty,direction))
-    #snake.append(Snake(startX-2*snake[0].getSize(),starty,direction))
     food = Food()
 
     crashed = False
@@ -108,8 +112,8 @@ def main():
             crashed = True
         
         clock.tick(60)
-        screen.fill([0,0,0])
-
+        screen.fill([0,0,0]) 
+        
         #controling the snake
         direct = snake[0].getDirection() #this will be used to update the 2nd snake
         if ev.type == pygame.KEYDOWN:
@@ -135,6 +139,7 @@ def main():
 
         #food has been eaten
         if eatfood(snake[0].getX(),snake[0].getY(),food.getX(),food.getY()):
+            points+=1
             side = snake[len(snake)-1].getDirection()
             if side == "up":
                 x = snake[len(snake)-1].getX()
@@ -152,7 +157,7 @@ def main():
             food.changePos()
 
         #update score board
-        drawScoreBoard(screen,0)
+        drawScoreBoard(screen,points)
 
         #lose conditions
         if outOfBounds(snake[0].getX(),snake[0].getY()) or \
