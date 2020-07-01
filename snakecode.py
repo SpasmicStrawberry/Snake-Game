@@ -133,7 +133,6 @@ def main():
         #lose conditions
         if outOfBounds(snake[0].getX(),snake[0].getY()) or \
             hitSelf(snake[0].getX(),snake[0].getY(),snake):
-            crashed = True
             break
         
         #redraw the snake
