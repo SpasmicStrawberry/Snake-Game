@@ -129,6 +129,14 @@ def main():
 
         #update snake
         snake[0].move()
+
+        #lose conditions
+        if outOfBounds(snake[0].getX(),snake[0].getY()) or \
+            hitSelf(snake[0].getX(),snake[0].getY(),snake):
+            crashed = True
+            break
+        
+        #redraw the snake
         snake[0].draw(screen)
         for i in range(1,len(snake)):
             tempDir = snake[i].getDirection()
@@ -158,17 +166,14 @@ def main():
             while any(e.getX() == food.getX() for e in snake) and\
                 any(e.getY() == food.getY() for e in snake):
                 food.changePos()
+        #redraw food
+        food.draw(screen)
 
         #update score board
         drawScoreBoard(screen,points)
-
-        #lose conditions
-        if outOfBounds(snake[0].getX(),snake[0].getY()) or \
-            hitSelf(snake[0].getX(),snake[0].getY(),snake):
-            crashed = True
-
-        food.draw(screen)
+        
         pygame.display.flip()
 
+        #controls the speed of the snake
         pygame.time.delay(80)
 main()
