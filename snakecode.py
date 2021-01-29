@@ -176,18 +176,4 @@ def main():
 
         #controls the speed of the snake
         pygame.time.delay(80)
-    
-    #death animation
-    while len(snake) > 0:
-        clock.tick(60)
-        screen.fill([0,0,0])
-        snake.pop(0)
-
-        for e in snake:
-            e.draw(screen)
-
-        drawScoreBoard(screen,points)
-        pygame.display.flip()
-        pygame.time.delay(100)
-
 main()
